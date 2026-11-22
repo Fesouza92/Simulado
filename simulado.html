@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulado Interativo — 4º Ano</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-top: #e0f2fe;
+      --bg-mid: #f0f9ff;
+      --bg-bottom: #fefce8;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-shadow: #1e40af;
+      --primary-soft: #eff6ff;
+      --success: #16a34a;
+      --success-bg: #dcfce7;
+      --success-border: #15803d;
+      --success-text: #14532d;
+      --error: #dc2626;
+      --error-bg: #fee2e2;
+      --error-border: #b91c1c;
+      --error-text: #7f1d1d;
+      --accent: #f59e0b;
+      --accent-soft: #fef3c7;
+      --border: #cbd5e1;
+      --border-light: #e2e8f0;
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Plus Jakarta Sans", "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-mid);
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(59, 130, 246, 0.14) 0%, transparent 32%),
+        radial-gradient(circle at 88% 15%, rgba(245, 158, 11, 0.14) 0%, transparent 30%),
+        radial-gradient(circle at 80% 85%, rgba(16, 185, 129, 0.12) 0%, transparent 35%),
+        linear-gradient(160deg, var(--bg-top) 0%, var(--bg-mid) 50%, var(--bg-bottom) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    h1, h2, h3, .badge-score, .subject-btn, .btn, .q-meta {
+      font-family: "Nunito", "Segoe UI", sans-serif;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      border: 2px solid #ffffff;
+      border-radius: var(--radius);
+      padding: 18px 26px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.07), 0 2px 6px rgba(15, 23, 42, 0.04);
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .header-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      flex-shrink: 0;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.55rem;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .header p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    .badge-score {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      color: #92400e;
+      border: 2px solid #f59e0b;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 1rem;
+      box-shadow: 0 3px 0 #d97706;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-score::before {
+      content: "⭐";
+      font-size: 1.05rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 2px solid #ffffff;
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(15, 23, 42, 0.03);
+      animation: fadeSlideIn 0.28s ease-out;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card h2 {
+      margin: 0 0 6px;
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .card > p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .subject-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+      margin: 22px 0 26px;
+    }
+
+    .subject-btn {
+      background: #f8fafc;
+      border: 2px solid var(--border-light);
+      border-bottom-width: 4px;
+      border-radius: 16px;
+      padding: 16px 14px;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.16s ease;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .subject-btn::before {
+      font-size: 1.55rem;
+      line-height: 1;
+    }
+
+    .subject-btn[data-subject="TODAS"]::before { content: "🎯"; }
+    .subject-btn[data-subject="PORTUGUÊS"]::before { content: "📚"; }
+    .subject-btn[data-subject="MATEMÁTICA"]::before { content: "🔢"; }
+    .subject-btn[data-subject="CIÊNCIAS"]::before { content: "🌎"; }
+    .subject-btn[data-subject="GEOGRAFIA"]::before { content: "🗺️"; }
+    .subject-btn[data-subject="HISTÓRIA"]::before { content: "🏛️"; }
+
+    .subject-btn:hover {
+      border-color: #93c5fd;
+      background: var(--primary-soft);
+      transform: translateY(-2px);
+    }
+
+    .subject-btn.active {
+      border-color: var(--primary);
+      border-bottom-color: var(--primary-shadow);
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-bottom: 4px solid var(--primary-shadow);
+      border-radius: 14px;
+      padding: 14px 26px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.14s ease;
+      letter-spacing: 0.01em;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(2px);
+      border-bottom-width: 2px;
+    }
+
+    #startBtn {
+      width: 100%;
+      font-size: 1.15rem;
+      padding: 16px 28px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: var(--muted);
+      border: 2px solid var(--border-light);
+      border-bottom-width: 4px;
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    .progress-wrap {
+      margin-bottom: 20px;
+      background: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border-light);
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    #qSubjectLabel {
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.8rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      padding: 2px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #3b82f6, #10b981);
+      width: 0%;
+      transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .q-meta {
+      display: inline-block;
+      background: var(--accent-soft);
+      color: #92400e;
+      border: 1px solid #fde68a;
+      font-weight: 800;
+      font-size: 0.8rem;
+      padding: 5px 12px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      letter-spacing: 0.03em;
+    }
+
+    .passage-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-light);
+      border-left: 5px solid var(--primary);
+      padding: 14px 18px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      font-size: 1.02rem;
+      line-height: 1.6;
+      color: #334155;
+    }
+
+    .question-title {
+      font-size: 1.25rem;
+      line-height: 1.48;
+      margin: 0 0 22px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-bottom-width: 4px;
+      border-radius: 14px;
+      padding: 15px 18px;
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(37, 99, 235, 0.1);
+    }
+
+    .option-btn:active:not(:disabled) {
+      transform: translateY(1px);
+      border-bottom-width: 2px;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .option-btn.correct {
+      background: var(--success-bg);
+      border-color: var(--success-border);
+      color: var(--success-text);
+      font-weight: 700;
+      animation: popCorrect 0.3s ease;
+    }
+
+    .option-btn.wrong {
+      background: var(--error-bg);
+      border-color: var(--error-border);
+      color: var(--error-text);
+      animation: shakeWrong 0.32s ease;
+    }
+
+    @keyframes popCorrect {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.015); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes shakeWrong {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .feedback {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 14px;
+      font-size: 0.98rem;
+      line-height: 1.5;
+      font-weight: 600;
+      display: none;
+    }
+
+    .feedback.ok {
+      display: block;
+      background: var(--success-bg);
+      border: 2px solid var(--success-border);
+      color: var(--success-text);
+    }
+
+    .feedback.ok::before {
+      content: "✅ ";
+    }
+
+    .feedback.no {
+      display: block;
+      background: var(--error-bg);
+      border: 2px solid var(--error-border);
+      color: var(--error-text);
+    }
+
+    .feedback.no::before {
+      content: "💡 ";
+    }
+
+    .footer-actions {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    #finalSummaryText {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      background: var(--primary-soft);
+      border: 1px solid #bfdbfe;
+      padding: 14px 18px;
+      border-radius: 14px;
+      margin: 14px 0 18px;
+    }
+
+    .summary-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 16px 0 22px;
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .summary-table th,
+    .summary-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .summary-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .summary-table th {
+      background: #f8fafc;
+      font-weight: 700;
+      color: var(--muted);
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .summary-table td:first-child {
+      font-weight: 700;
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding: 32px 24px;
+      }
+
+      .header {
+        padding: 22px 32px;
+      }
+
+      .header h1 {
+        font-size: 1.75rem;
+      }
+
+      .card {
+        padding: 36px 40px;
+      }
+
+      .subject-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+
+      .question-title {
+        font-size: 1.38rem;
+      }
+
+      .options {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+
+      #startBtn {
+        width: auto;
+        min-width: 240px;
+        display: block;
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-brand">
+        <div class="header-icon">🎓</div>
+        <div>
+          <h1>Simulado Interativo — 4º Ano</h1>
+          <p>Português, Matemática, Ciências, Geografia e História</p>
+        </div>
+      </div>
+      <div class="badge-score" id="scoreBadge">Acertos: 0</div>
+    </div>
+
+    <div class="card" id="startScreen">
+      <h2>Escolha como quer jogar</h2>
+      <p>Selecione todas as matérias juntas ou escolha apenas uma disciplina para começar:</p>
+
+      <div class="subject-grid" id="subjectGrid">
+        <button class="subject-btn active" data-subject="TODAS">Todas as Matérias (50)</button>
+        <button class="subject-btn" data-subject="PORTUGUÊS">Português (10)</button>
+        <button class="subject-btn" data-subject="MATEMÁTICA">Matemática (10)</button>
+        <button class="subject-btn" data-subject="CIÊNCIAS">Ciências (10)</button>
+        <button class="subject-btn" data-subject="GEOGRAFIA">Geografia (10)</button>
+        <button class="subject-btn" data-subject="HISTÓRIA">História (10)</button>
+      </div>
+
+      <button class="btn" id="startBtn">Começar Quiz</button>
+    </div>
+
+    <div class="card" id="quizScreen" style="display:none;">
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span id="qCounter">Questão 1 de 50</span>
+          <span id="qSubjectLabel">PORTUGUÊS</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div class="q-meta" id="qTopic">QUESTÃO 1 • INTERPRETAÇÃO</div>
+      <div class="passage-box" id="passageBox" style="display:none;"></div>
+      <h2 class="question-title" id="questionTitle">Pergunta</h2>
+
+      <div class="options" id="optionsBox"></div>
+      <div class="feedback" id="feedbackBox"></div>
+
+      <div class="footer-actions">
+        <button class="btn btn-secondary" id="backMenuBtn">Voltar ao Início</button>
+        <button class="btn" id="nextBtn" style="display:none;">Próxima Questão</button>
+      </div>
+    </div>
+
+    <div class="card" id="resultScreen" style="display:none;">
+      <h2>🏆 Resultado Final!</h2>
+      <p id="finalSummaryText"></p>
+      <table class="summary-table" id="breakdownTable">
+        <thead>
+          <tr>
+            <th>Disciplina</th>
+            <th>Acertos</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="footer-actions">
+        <button class="btn btn-secondary" id="homeFromResultBtn">Escolher Outra Matéria</button>
+        <button class="btn" id="restartBtn">Jogar Novamente</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const QUESTIONS = [
+      // ==================== LÍNGUA PORTUGUESA (1 a 10) ====================
+      {
+        id: 1, subject: "PORTUGUÊS", topic: "QUESTÃO 1 • INTERPRETAÇÃO DE TEXTO",
+        passage: "<strong>A festa do bairro</strong><br>No último sábado, os moradores do bairro se reuniram para uma tarde de samba, alegria e muita celebração. Miguel e Sofia organizaram tudo com muito carinho.<br>Havia balões dourados e rosas, música, comidas típicas e muita dança. As crianças brincaram, os adultos conversaram e todos saíram da festa muito felizes.<br>— Foi a melhor festa do ano! — disse Sofia, sorrindo.",
+        q: "De acordo com o texto, o que os moradores do bairro fizeram no último sábado?",
+        options: [
+          "A) Foram à escola estudar",
+          "B) Se reuniram para uma tarde de samba e celebração",
+          "C) Ficaram em casa descansando",
+          "D) Foram trabalhar na feira"
+        ],
+        answer: 1,
+        tip: "Logo no primeiro parágrafo, o texto conta que os moradores se reuniram para uma tarde de samba, alegria e celebração."
+      },
+      {
+        id: 2, subject: "PORTUGUÊS", topic: "QUESTÃO 2 • PONTUAÇÃO (TRAVESSÃO)",
+        passage: "“— Foi a melhor festa do ano! — disse Sofia, sorrindo.”",
+        q: "No trecho acima, o travessão foi usado para:",
+        options: [
+          "A) Indicar a fala de uma personagem",
+          "B) Separar o título do texto",
+          "C) Mostrar que a frase terminou",
+          "D) Indicar uma lista de compras"
+        ],
+        answer: 0,
+        tip: "Nos textos narrativos, o travessão (—) marca o início da fala direta de um personagem."
+      },
+      {
+        id: 3, subject: "PORTUGUÊS", topic: "QUESTÃO 3 • CIRCUNSTÂNCIA DE MODO",
+        passage: "“Miguel e Sofia organizaram tudo <u>com muito carinho</u>.”",
+        q: "Na frase acima, a expressão destacada dá ideia de:",
+        options: [
+          "A) Lugar",
+          "B) Tempo",
+          "C) Modo",
+          "D) Quantidade"
+        ],
+        answer: 2,
+        tip: "“Com muito carinho” mostra a maneira (o modo) como Miguel e Sofia organizaram a festa."
+      },
+      {
+        id: 4, subject: "PORTUGUÊS", topic: "QUESTÃO 4 • GÊNERO TEXTUAL: BILHETE",
+        passage: "<strong>Bilhete</strong><br>Querida Sofia,<br>Amanhã teremos o ensaio de samba às 14h no salão do bairro. Não se esqueça de trazer o pandeiro!<br>Beijos,<br>Miguel",
+        q: "Qual é a finalidade desse bilhete?",
+        options: [
+          "A) Convidar para uma festa de aniversário",
+          "B) Avisar sobre o horário do ensaio de samba",
+          "C) Contar uma história de aventura",
+          "D) Ensinar a tocar pandeiro"
+        ],
+        answer: 1,
+        tip: "O bilhete é um texto curto escrito para dar um aviso rápido: neste caso, lembrar Sofia do horário e local do ensaio."
+      },
+      {
+        id: 5, subject: "PORTUGUÊS", topic: "QUESTÃO 5 • DIVISÃO SILÁBICA",
+        q: "Na palavra PANDEIRO, quantas sílabas ela tem?",
+        options: [
+          "A) 2",
+          "B) 3",
+          "C) 4",
+          "D) 5"
+        ],
+        answer: 1,
+        tip: "Separando as sílabas de PANDEIRO, temos 3 sílabas: PAN - DEI - RO (o encontro vocálico EI fica na mesma sílaba)."
+      },
+      {
+        id: 6, subject: "PORTUGUÊS", topic: "QUESTÃO 6 • TEMPOS VERBAIS",
+        passage: "“Os alunos <u>estudaram</u> bastante para a prova de recuperação.”",
+        q: "O verbo destacado está no:",
+        options: [
+          "A) Presente, pois a ação está acontecendo agora",
+          "B) Passado, pois a ação já aconteceu",
+          "C) Futuro, pois a ação ainda vai acontecer",
+          "D) Presente, pois a ação vai acontecer amanhã"
+        ],
+        answer: 1,
+        tip: "“Estudaram” indica uma ação que já foi concluída antes do momento da fala, portanto está no passado."
+      },
+      {
+        id: 7, subject: "PORTUGUÊS", topic: "QUESTÃO 7 • DÍGRAFO",
+        q: "Observe as palavras: CHUVA - PLANTA - ESCOLA – FESTA. A palavra que apresenta dígrafo é:",
+        options: [
+          "A) CHUVA",
+          "B) PLANTA",
+          "C) ESCOLA",
+          "D) FESTA"
+        ],
+        answer: 0,
+        tip: "Em CHUVA, as duas letras “CH” representam um único som, formando um dígrafo."
+      },
+      {
+        id: 8, subject: "PORTUGUÊS", topic: "QUESTÃO 8 • GÊNERO TEXTUAL: TIRINHA",
+        passage: "Miguel: — Você já estudou para a prova?<br>Sofia: — Sim! Estudei Português e Matemática!",
+        q: "O texto é uma tirinha porque apresenta:",
+        options: [
+          "A) Apenas uma receita",
+          "B) Diálogo entre personagens com balões",
+          "C) Somente um poema",
+          "D) Uma lista de compras"
+        ],
+        answer: 1,
+        tip: "As tirinhas contam histórias curtas por meio de quadrinhos e diálogos entre personagens."
+      },
+      {
+        id: 9, subject: "PORTUGUÊS", topic: "QUESTÃO 9 • ORTOGRAFIA",
+        q: "Assinale a alternativa em que todas as palavras estão escritas corretamente:",
+        options: [
+          "A) Ezcola - caza – festa",
+          "B) Escola - casa – festa",
+          "C) Escola - caza – festa",
+          "D) Esqola - casa – festa"
+        ],
+        answer: 1,
+        tip: "A grafia correta é: Escola (com S), casa (com S entre vogais) e festa."
+      },
+      {
+        id: 10, subject: "PORTUGUÊS", topic: "QUESTÃO 10 • SINÔNIMO / SENTIDO DAS PALAVRAS",
+        passage: "“A professora pediu que os alunos lessem o texto <u>atentamente</u>.”",
+        q: "A palavra destacada pode ser substituída, sem mudar o sentido, por:",
+        options: [
+          "A) Rapidamente",
+          "B) Com atenção",
+          "C) Com preguiça",
+          "D) Com barulho"
+        ],
+        answer: 1,
+        tip: "Ler atentamente significa ler com cuidado e com atenção."
+      },
+
+      // ==================== MATEMÁTICA (11 a 20) ====================
+      {
+        id: 11, subject: "MATEMÁTICA", topic: "QUESTÃO 1 • MULTIPLICAÇÃO",
+        q: "Miguel comprou 4 pacotes de balões. Em cada pacote havia 25 balões. Para saber quantos balões ele comprou no total, é necessário fazer a operação:",
+        options: [
+          "A) 25 + 4",
+          "B) 25 – 4",
+          "C) 25 x 4",
+          "D) 25 ÷ 4"
+        ],
+        answer: 2,
+        tip: "Quando temos quantidades iguais repetidas (4 pacotes com 25 balões cada), usamos a multiplicação: 25 × 4 = 100."
+      },
+      {
+        id: 12, subject: "MATEMÁTICA", topic: "QUESTÃO 2 • ADIÇÃO",
+        q: "Na festa do bairro, foram distribuídos 125 doces pela manhã e 148 doces à tarde. Quantos doces foram distribuídos no total?",
+        options: [
+          "A) 263",
+          "B) 273",
+          "C) 283",
+          "D) 2.630"
+        ],
+        answer: 1,
+        tip: "Somando 125 + 148: 5 + 8 = 13 (fica 3 e vai 1); 1 + 2 + 4 = 7; 1 + 1 = 2. Total: 273 doces."
+      },
+      {
+        id: 13, subject: "MATEMÁTICA", topic: "QUESTÃO 3 • SEQUÊNCIA NUMÉRICA",
+        q: "Observe a sequência: 2.000 - 2.500 - 3.000 - 3.500 - ______. Qual número completa a sequência?",
+        options: [
+          "A) 3.600",
+          "B) 4.000",
+          "C) 4.500",
+          "D) 5.000"
+        ],
+        answer: 1,
+        tip: "A sequência aumenta de 500 em 500. Somando 3.500 + 500, chegamos a 4.000."
+      },
+      {
+        id: 14, subject: "MATEMÁTICA", topic: "QUESTÃO 4 • SISTEMA MONETÁRIO",
+        q: "Sofia tinha R$ 50,00 e gastou R$ 32,50 na compra de enfeites para a festa. Quanto restou para Sofia?",
+        options: [
+          "A) R$ 17,50",
+          "B) R$ 18,50",
+          "C) R$ 27,50",
+          "D) R$ 82,50"
+        ],
+        answer: 0,
+        tip: "Fazendo a subtração: R$ 50,00 - R$ 32,50 = R$ 17,50."
+      },
+      {
+        id: 15, subject: "MATEMÁTICA", topic: "QUESTÃO 5 • FRAÇÕES",
+        q: "Uma pizza foi dividida em 8 partes iguais. Miguel comeu 3 partes e Sofia comeu 2 partes. Que fração da pizza eles comeram juntos?",
+        options: [
+          "A) 2/8",
+          "B) 3/8",
+          "C) 5/8",
+          "D) 8/5"
+        ],
+        answer: 2,
+        tip: "Eles comeram 3 + 2 = 5 fatias de um total de 8 fatias iguais, o que representa 5/8."
+      },
+      {
+        id: 16, subject: "MATEMÁTICA", topic: "QUESTÃO 6 • MEDIDAS DE TEMPO",
+        q: "O ensaio de samba começou às 14h e terminou às 16h30. Quanto tempo durou o ensaio?",
+        options: [
+          "A) 1 hora",
+          "B) 1 hora e 30 minutos",
+          "C) 2 horas",
+          "D) 2 horas e 30 minutos"
+        ],
+        answer: 3,
+        tip: "Das 14h às 16h passam-se 2 horas, mais 30 minutos até 16h30 = 2 horas e 30 minutos."
+      },
+      {
+        id: 17, subject: "MATEMÁTICA", topic: "QUESTÃO 7 • DIVISÃO",
+        q: "Em uma caixa há 96 brigadeiros que serão divididos igualmente entre 4 mesas. Quantos brigadeiros ficarão em cada mesa?",
+        options: [
+          "A) 22",
+          "B) 24",
+          "C) 32",
+          "D) 92"
+        ],
+        answer: 1,
+        tip: "Dividindo 96 por 4: 96 ÷ 4 = 24 brigadeiros em cada mesa."
+      },
+      {
+        id: 18, subject: "MATEMÁTICA", topic: "QUESTÃO 8 • VALOR POSICIONAL",
+        q: "Observe o número: 4.587. O valor do algarismo 5 nesse número é:",
+        options: [
+          "A) 5",
+          "B) 50",
+          "C) 500",
+          "D) 5.000"
+        ],
+        answer: 2,
+        tip: "No número 4.587, o algarismo 5 ocupa a ordem das centenas, valendo 500."
+      },
+      {
+        id: 19, subject: "MATEMÁTICA", topic: "QUESTÃO 9 • MEDIDAS DE COMPRIMENTO",
+        q: "Miguel mediu a fita para decorar o salão. A fita tinha 2 metros e 50 centímetros. Quantos centímetros tem a fita no total?",
+        options: [
+          "A) 25 cm",
+          "B) 205 cm",
+          "C) 250 cm",
+          "D) 2.500 cm"
+        ],
+        answer: 2,
+        tip: "Como 1 metro tem 100 cm, 2 metros têm 200 cm. Somando 200 cm + 50 cm = 250 cm."
+      },
+      {
+        id: 20, subject: "MATEMÁTICA", topic: "QUESTÃO 10 • FRAÇÃO DE QUANTIDADE",
+        q: "Em uma turma de 30 alunos, 1/3 dos alunos faltou no dia da prova. Quantos alunos faltaram?",
+        options: [
+          "A) 3",
+          "B) 10",
+          "C) 15",
+          "D) 30"
+        ],
+        answer: 1,
+        tip: "Para achar 1/3 de 30, dividimos o total por 3: 30 ÷ 3 = 10 alunos."
+      },
+
+      // ==================== CIÊNCIAS (21 a 30) ====================
+      {
+        id: 21, subject: "CIÊNCIAS", topic: "QUESTÃO 1 • NECESSIDADES DAS PLANTAS",
+        passage: "<strong>A horta da escola</strong><br>Miguel e Sofia ajudaram a montar a horta da escola. Eles perceberam que as plantas precisavam de água, luz do Sol e terra boa para crescer. Quando regavam todos os dias, as plantas ficavam verdinhas e fortes. Quando esqueciam de regar, as folhas ficavam murchas.",
+        q: "De acordo com o texto, o que as plantas precisam para crescer saudáveis?",
+        options: [
+          "A) Apenas terra e vento",
+          "B) Água, luz do Sol e terra boa",
+          "C) Apenas água e sombra",
+          "D) Terra boa e gelo"
+        ],
+        answer: 1,
+        tip: "O texto informa que as plantas precisam de água, luz do Sol e terra boa para crescer."
+      },
+      {
+        id: 22, subject: "CIÊNCIAS", topic: "QUESTÃO 2 • COMPREENSÃO DE TEXTO",
+        passage: "“Quando regavam todos os dias, as plantas ficavam verdinhas e fortes. Quando esqueciam de regar, as folhas ficavam murchas.”",
+        q: "Quando Miguel e Sofia esqueciam de regar as plantas, o que acontecia?",
+        options: [
+          "A) As plantas cresciam mais rápido",
+          "B) As folhas ficavam murchas",
+          "C) As plantas mudavam de cor para azul",
+          "D) Nada acontecia com as plantas"
+        ],
+        answer: 1,
+        tip: "Sem água, as plantas perdem hidratação e suas folhas ficam murchas."
+      },
+      {
+        id: 23, subject: "CIÊNCIAS", topic: "QUESTÃO 3 • MOVIMENTO DE ROTAÇÃO",
+        passage: "<strong>O dia e a noite</strong><br>Sofia observou que, durante o dia, o Sol ilumina a Terra e conseguimos enxergar tudo. À noite, a parte onde moramos fica sem a luz do Sol e vemos a Lua e as estrelas. Isso acontece porque a Terra gira em torno dela mesma.",
+        q: "O dia e a noite acontecem porque a Terra:",
+        options: [
+          "A) Fica parada no espaço",
+          "B) Gira em torno dela mesma",
+          "C) Fica mais perto da Lua",
+          "D) Para de girar à noite"
+        ],
+        answer: 1,
+        tip: "O giro da Terra em torno de si mesma (rotação) faz com que cada parte receba luz solar em um período e fique no escuro em outro."
+      },
+      {
+        id: 24, subject: "CIÊNCIAS", topic: "QUESTÃO 4 • OBSERVAÇÃO DO CÉU",
+        q: "Durante a noite, conseguimos ver no céu:",
+        options: [
+          "A) Apenas o Sol",
+          "B) O Sol e as nuvens",
+          "C) A Lua e as estrelas",
+          "D) Apenas nuvens escuras"
+        ],
+        answer: 2,
+        tip: "À noite, sem a claridade intensa do Sol, conseguimos observar a Lua e as estrelas no céu."
+      },
+      {
+        id: 25, subject: "CIÊNCIAS", topic: "QUESTÃO 5 • ESTADOS FÍSICOS DA ÁGUA",
+        passage: "Miguel deixou uma garrafa de água no congelador. No dia seguinte, a água tinha virado gelo.",
+        q: "Esse processo de mudança da água líquida para o gelo é chamado de:",
+        options: [
+          "A) Evaporação",
+          "B) Fusão",
+          "C) Solidificação",
+          "D) Condensação"
+        ],
+        answer: 2,
+        tip: "A passagem do estado líquido para o estado sólido (gelo), por resfriamento, chama-se solidificação."
+      },
+      {
+        id: 26, subject: "CIÊNCIAS", topic: "QUESTÃO 6 • USO CONSCIENTE DA ÁGUA",
+        passage: "Observe as situações: uma torneira pingando e uma pessoa jogando lixo no rio.",
+        q: "Qual atitude ajuda a preservar a água?",
+        options: [
+          "A) Deixar a torneira pingando",
+          "B) Jogar lixo no rio",
+          "C) Fechar a torneira enquanto escova os dentes",
+          "D) Tomar banhos muito longos"
+        ],
+        answer: 2,
+        tip: "Fechar a torneira ao escovar os dentes evita o desperdício de muitos litros de água limpa."
+      },
+      {
+        id: 27, subject: "CIÊNCIAS", topic: "QUESTÃO 7 • TIPOS DE SOLO",
+        q: "Sofia estava estudando sobre o solo e aprendeu que existem diferentes tipos de solo. O solo que é bom para plantar, porque segura água e tem muitos nutrientes, é o solo:",
+        options: [
+          "A) Arenoso",
+          "B) Argiloso",
+          "C) Humoso",
+          "D) Rochoso"
+        ],
+        answer: 2,
+        tip: "O solo humoso (terra preta) é rico em matéria orgânica (húmus), sendo o mais fértil para a agricultura."
+      },
+      {
+        id: 28, subject: "CIÊNCIAS", topic: "QUESTÃO 8 • PROPRIEDADES DO AR",
+        passage: "Na escola, a professora explicou que o ar está em todo lugar, mesmo que a gente não consiga ver. Quando enchemos um balão, ele fica cheio de ar.",
+        q: "O texto mostra que o ar:",
+        options: [
+          "A) Não existe",
+          "B) Só existe dentro do balão",
+          "C) Ocupa espaço",
+          "D) Só existe quando venta"
+        ],
+        answer: 2,
+        tip: "Quando sopramos dentro do balão, ele aumenta de tamanho porque o ar ocupa espaço dentro dele."
+      },
+      {
+        id: 29, subject: "CIÊNCIAS", topic: "QUESTÃO 9 • SERES VIVOS E O SOLO",
+        q: "Miguel percebeu que, depois da chuva, apareceram minhocas na terra do jardim. As minhocas ajudam o solo porque:",
+        options: [
+          "A) Comem as plantas",
+          "B) Deixam o solo mais fofo e com buracos para a água e o ar passarem",
+          "C) Deixam o solo mais duro",
+          "D) Tiram os nutrientes do solo"
+        ],
+        answer: 1,
+        tip: "As minhocas cavam galerias que arejam a terra, facilitam a entrada de água e enriquecem o solo com húmus."
+      },
+      {
+        id: 30, subject: "CIÊNCIAS", topic: "QUESTÃO 10 • CUIDADOS COM O AMBIENTE",
+        passage: "Na festa do bairro, Sofia viu muitas pessoas jogando copos de plástico no chão. Ela lembrou que o lixo deve ser colocado na lixeira para não poluir o ambiente.",
+        q: "Qual é a consequência de jogar lixo no chão?",
+        options: [
+          "A) O ambiente fica mais limpo",
+          "B) O solo e a água ficam poluídos",
+          "C) As plantas crescem mais",
+          "D) Nada acontece com o ambiente"
+        ],
+        answer: 1,
+        tip: "O lixo descartado no chão contamina o solo e pode ser levado pela chuva para rios e córregos, poluindo a água."
+      },
+
+      // ==================== GEOGRAFIA (31 a 40) ====================
+      {
+        id: 31, subject: "GEOGRAFIA", topic: "QUESTÃO 1 • PAISAGEM URBANA",
+        passage: "<strong>O bairro de Miguel e Sofia</strong><br>Miguel mora em um bairro da cidade. Perto da casa dele há prédios, ruas asfaltadas, lojas e uma praça com brinquedos. Sofia mora em uma área mais afastada, onde há plantações, poucas casas e uma estrada de terra. Nos dois lugares, as pessoas trabalham, estudam e vivem em comunidade.",
+        q: "De acordo com o texto, o lugar onde Miguel mora é uma paisagem:",
+        options: [
+          "A) Rural, pois há plantações e estrada de terra",
+          "B) Urbana, pois há prédios, ruas asfaltadas e lojas",
+          "C) Rural, pois há uma praça",
+          "D) Urbana, pois há poucas casas"
+        ],
+        answer: 1,
+        tip: "A presença de prédios, ruas asfaltadas e comércio caracteriza a paisagem urbana (cidade)."
+      },
+      {
+        id: 32, subject: "GEOGRAFIA", topic: "QUESTÃO 2 • PAISAGEM RURAL",
+        q: "O lugar onde Sofia mora é uma paisagem rural porque:",
+        options: [
+          "A) Tem muitos prédios e lojas",
+          "B) Tem plantações, poucas casas e estrada de terra",
+          "C) Tem ruas asfaltadas e praças",
+          "D) Tem muitos carros e semáforos"
+        ],
+        answer: 1,
+        tip: "O espaço rural (campo) é marcado por plantações, criação de animais, estradas de terra e menor concentração de casas."
+      },
+      {
+        id: 33, subject: "GEOGRAFIA", topic: "QUESTÃO 3 • ATIVIDADES ECONÔMICAS DO CAMPO",
+        passage: "<strong>O trabalho no campo e na cidade</strong><br>Na área rural, muitas pessoas trabalham na agricultura, cuidando das plantações e criando animais. Na área urbana, muitas pessoas trabalham no comércio, nas escolas, nos hospitais e nas fábricas. Os alimentos produzidos no campo chegam até a cidade para serem vendidos.",
+        q: "De acordo com o texto, um trabalho comum na área rural é:",
+        options: [
+          "A) Trabalhar em um hospital",
+          "B) Trabalhar na agricultura, cuidando das plantações",
+          "C) Trabalhar em uma loja de roupas",
+          "D) Trabalhar em uma fábrica de carros"
+        ],
+        answer: 1,
+        tip: "Na área rural predominam atividades ligadas à terra, como a agricultura e a pecuária."
+      },
+      {
+        id: 34, subject: "GEOGRAFIA", topic: "QUESTÃO 4 • RELAÇÃO CAMPO E CIDADE",
+        q: "Os alimentos produzidos no campo chegam até a cidade para:",
+        options: [
+          "A) Serem jogados fora",
+          "B) Serem vendidos para as pessoas",
+          "C) Ficarem guardados no campo",
+          "D) Serem transformados em brinquedos"
+        ],
+        answer: 1,
+        tip: "O campo abastece a cidade com alimentos e matérias-primas que são comercializados para a população."
+      },
+      {
+        id: 35, subject: "GEOGRAFIA", topic: "QUESTÃO 5 • ELEMENTOS NATURAIS DA PAISAGEM",
+        passage: "Sofia viajou com sua família para o interior. No caminho, ela observou montanhas, um rio e muitas árvores. Ela percebeu que a paisagem tinha mudado.",
+        q: "Os elementos observados por Sofia, como montanhas, rio e árvores, são elementos:",
+        options: [
+          "A) Artificiais, criados pelo ser humano",
+          "B) Naturais, pois existem na natureza",
+          "C) Artificiais, pois foram construídos",
+          "D) Naturais, pois foram feitos nas fábricas"
+        ],
+        answer: 1,
+        tip: "Montanhas, rios e vegetação nativa são elementos naturais, formados pela própria natureza sem intervenção humana."
+      },
+      {
+        id: 36, subject: "GEOGRAFIA", topic: "QUESTÃO 6 • ELEMENTOS CULTURAIS / HUMANIZADOS",
+        passage: "Observe a cena: uma rua com casas, postes, carros e uma escola.",
+        q: "Nessa paisagem, os postes, as casas e a escola são elementos:",
+        options: [
+          "A) Naturais",
+          "B) Transformados pela ação humana",
+          "C) Que sempre existiram na natureza",
+          "D) Que nascem da terra"
+        ],
+        answer: 1,
+        tip: "Construções como casas, escolas e postes são elementos culturais (ou humanizados), criados pelo trabalho humano."
+      },
+      {
+        id: 37, subject: "GEOGRAFIA", topic: "QUESTÃO 7 • PROBLEMAS AMBIENTAIS URBANOS",
+        q: "Miguel aprendeu na escola que o lixo jogado nas ruas pode entupir os bueiros e causar enchentes quando chove. Para evitar esse problema, devemos:",
+        options: [
+          "A) Jogar o lixo na rua",
+          "B) Jogar o lixo no rio",
+          "C) Jogar o lixo na lixeira e separar o que pode ser reciclado",
+          "D) Deixar o lixo em qualquer lugar"
+        ],
+        answer: 2,
+        tip: "Descartar o lixo corretamente nas lixeiras e praticar a coleta seletiva mantém os bueiros limpos e evita alagamentos."
+      },
+      {
+        id: 38, subject: "GEOGRAFIA", topic: "QUESTÃO 8 • PONTOS DE REFERÊNCIA",
+        passage: "No mapa do bairro, a escola fica ao lado da praça e em frente ao mercado.",
+        q: "A localização da escola foi indicada usando:",
+        options: [
+          "A) Pontos de referência",
+          "B) Apenas números",
+          "C) Apenas cores",
+          "D) O nome das ruas do Brasil todo"
+        ],
+        answer: 0,
+        tip: "Lugares conhecidos por perto (como a praça e o mercado) funcionam como pontos de referência para nos orientarmos."
+      },
+      {
+        id: 39, subject: "GEOGRAFIA", topic: "QUESTÃO 9 • MEIOS DE TRANSPORTE",
+        q: "Sofia percebeu que, no bairro dela, muitas pessoas vão trabalhar de ônibus, outras de bicicleta e outras a pé. Os meios de transporte citados são importantes porque:",
+        options: [
+          "A) Servem apenas para passear",
+          "B) Ajudam as pessoas a se deslocarem de um lugar para outro",
+          "C) Não servem para nada",
+          "D) Poluem mais do que os carros"
+        ],
+        answer: 1,
+        tip: "Os meios de transporte garantem a mobilidade das pessoas entre casa, escola, trabalho e lazer."
+      },
+      {
+        id: 40, subject: "GEOGRAFIA", topic: "QUESTÃO 10 • DIVERSIDADE E SEMELHANÇAS ENTRE CIDADES",
+        passage: "Miguel mora em São Paulo e seu primo mora em uma cidade pequena do interior. Miguel percebeu que as duas cidades são diferentes, mas que as pessoas dos dois lugares precisam de escola, moradia e alimentos.",
+        q: "O texto mostra que:",
+        options: [
+          "A) Só a cidade grande precisa de escola",
+          "B) Lugares diferentes podem ter necessidades parecidas",
+          "C) No interior ninguém precisa de escola",
+          "D) São Paulo não precisa de alimentos"
+        ],
+        answer: 1,
+        tip: "Independentemente do tamanho da cidade, todos os moradores têm direitos e necessidades básicas em comum."
+      },
+
+      // ==================== HISTÓRIA (41 a 50) ====================
+      {
+        id: 41, subject: "HISTÓRIA", topic: "QUESTÃO 1 • HISTÓRIA DO BAIRRO",
+        passage: "<strong>A história do bairro</strong><br>Miguel e Sofia foram conversar com Dona Maria, uma moradora antiga do bairro. Ela contou que, quando era criança, não havia asfalto nas ruas, as casas eram poucas e as pessoas buscavam água no poço. Hoje, o bairro tem escola, posto de saúde, praças e muitas casas. Dona Maria disse: “O bairro mudou muito, mas as festas e a amizade entre os vizinhos continuam as mesmas!”",
+        q: "De acordo com o texto, como era o bairro quando Dona Maria era criança?",
+        options: [
+          "A) Tinha asfalto, muitas casas e posto de saúde",
+          "B) Tinha poucas casas, ruas sem asfalto e as pessoas buscavam água no poço",
+          "C) Era igual a hoje, sem nenhuma mudança",
+          "D) Não tinha nenhuma casa e ninguém morava lá"
+        ],
+        answer: 1,
+        tip: "Segundo o relato de Dona Maria, antigamente havia poucas casas, ruas de terra (sem asfalto) e uso de poço."
+      },
+      {
+        id: 42, subject: "HISTÓRIA", topic: "QUESTÃO 2 • FONTES HISTÓRICAS ORAIS",
+        q: "Dona Maria é uma fonte de informação importante porque:",
+        options: [
+          "A) Ela inventou o bairro",
+          "B) Ela viveu no bairro há muito tempo e pode contar como ele era antes",
+          "C) Ela nunca morou no bairro",
+          "D) Ela não gosta de conversar"
+        ],
+        answer: 1,
+        tip: "As memórias e relatos de moradores antigos são fontes históricas orais valiosas para conhecer o passado da comunidade."
+      },
+      {
+        id: 43, subject: "HISTÓRIA", topic: "QUESTÃO 3 • FONTES HISTÓRICAS VISUAIS",
+        passage: "<strong>Fotografias antigas</strong><br>Na escola, a professora mostrou fotografias antigas do bairro. Sofia observou que as roupas das pessoas eram diferentes, os carros eram antigos e não existiam celulares. Miguel percebeu que a escola era bem menor do que é hoje.",
+        q: "As fotografias antigas são importantes para estudar História porque:",
+        options: [
+          "A) Servem apenas para enfeitar a sala",
+          "B) Mostram como as pessoas e os lugares eram no passado",
+          "C) Não servem para nada",
+          "D) Mostram apenas o futuro"
+        ],
+        answer: 1,
+        tip: "As fotografias registram imagens reais de outras épocas, ajudando a observar costumes, objetos e paisagens do passado."
+      },
+      {
+        id: 44, subject: "HISTÓRIA", topic: "QUESTÃO 4 • MUDANÇAS E PERMANÊNCIAS",
+        q: "Ao comparar as fotografias antigas com o bairro de hoje, Miguel e Sofia perceberam que:",
+        options: [
+          "A) Nada mudou com o passar do tempo",
+          "B) Muita coisa mudou, como as roupas, os carros e o tamanho da escola",
+          "C) O bairro ficou menor",
+          "D) As pessoas pararam de usar roupas"
+        ],
+        answer: 1,
+        tip: "Ao longo do tempo, o modo de vestir, os meios de transporte e as construções passam por transformações."
+      },
+      {
+        id: 45, subject: "HISTÓRIA", topic: "QUESTÃO 5 • OBJETOS ANTIGOS COMO FONTE HISTÓRICA",
+        passage: "Miguel encontrou no sótão da casa da avó um brinquedo antigo de madeira, que era do seu pai quando era criança. Hoje, os brinquedos são feitos, na maioria, de plástico e têm luzes e sons.",
+        q: "O brinquedo antigo é um objeto que:",
+        options: [
+          "A) Não conta nada sobre o passado",
+          "B) Mostra como eram os brinquedos em outra época",
+          "C) É igual aos brinquedos de hoje",
+          "D) Deve ser jogado fora porque é velho"
+        ],
+        answer: 1,
+        tip: "Objetos antigos são fontes materiais que revelam os materiais e os costumes das crianças de outras gerações."
+      },
+      {
+        id: 46, subject: "HISTÓRIA", topic: "QUESTÃO 6 • DATAS COMEMORATIVAS E MEMÓRIA",
+        q: "Sofia aprendeu que as pessoas comemoram datas importantes para lembrar de acontecimentos do passado. Um exemplo de data comemorativa é:",
+        options: [
+          "A) O dia do aniversário da escola",
+          "B) O dia em que ela foi ao mercado",
+          "C) O dia em que ela dormiu cedo",
+          "D) O dia em que ela perdeu um lápis"
+        ],
+        answer: 0,
+        tip: "O aniversário da escola celebra a história da instituição e das pessoas que fazem parte dela."
+      },
+      {
+        id: 47, subject: "HISTÓRIA", topic: "QUESTÃO 7 • EVOLUÇÃO DOS MEIOS DE COMUNICAÇÃO",
+        passage: "Antigamente, as pessoas se comunicavam por cartas, que demoravam dias para chegar. Hoje, podemos mandar mensagens pelo celular que chegam na mesma hora.",
+        q: "O texto mostra uma mudança na forma de:",
+        options: [
+          "A) Se alimentar",
+          "B) Se comunicar",
+          "C) Se vestir",
+          "D) Plantar"
+        ],
+        answer: 1,
+        tip: "Cartas e mensagens instantâneas pelo celular são formas de comunicação à distância que evoluíram com a tecnologia."
+      },
+      {
+        id: 48, subject: "HISTÓRIA", topic: "QUESTÃO 8 • POVOS INDÍGENAS DO BRASIL",
+        q: "Miguel e Sofia aprenderam que os povos indígenas já viviam no Brasil muito antes da chegada dos portugueses. Os povos indígenas:",
+        options: [
+          "A) Não tinham cultura e nem costumes",
+          "B) Tinham suas próprias culturas, línguas, costumes e modos de viver",
+          "C) Moravam apenas nas cidades grandes",
+          "D) Chegaram ao Brasil depois dos portugueses"
+        ],
+        answer: 1,
+        tip: "Os povos originários já habitavam estas terras há milhares de anos, com grande diversidade de línguas, saberes e tradições."
+      },
+      {
+        id: 49, subject: "HISTÓRIA", topic: "QUESTÃO 9 • LINHA DO TEMPO",
+        passage: "Avó de Miguel nasceu — Pai de Miguel nasceu — Miguel nasceu",
+        q: "A linha do tempo serve para:",
+        options: [
+          "A) Mostrar a ordem em que os acontecimentos aconteceram",
+          "B) Mostrar apenas o futuro",
+          "C) Esconder o passado",
+          "D) Mostrar somente os nomes das pessoas"
+        ],
+        answer: 0,
+        tip: "A linha do tempo organiza os fatos em ordem cronológica, do mais antigo para o mais recente."
+      },
+      {
+        id: 50, subject: "HISTÓRIA", topic: "QUESTÃO 10 • TRADIÇÕES E CULTURA",
+        passage: "Na festa junina da escola, Sofia dançou quadrilha, comeu pipoca e viu a fogueira. A professora explicou que a festa junina é uma tradição que passa de geração em geração, ou seja, dos mais velhos para os mais novos.",
+        q: "Uma tradição é algo que:",
+        options: [
+          "A) Acontece uma única vez e depois é esquecido",
+          "B) É passado de uma geração para outra e continua sendo celebrado",
+          "C) Ninguém gosta de comemorar",
+          "D) Acontece somente na escola de Sofia"
+        ],
+        answer: 1,
+        tip: "Tradições são costumes, festas e saberes transmitidos entre gerações ao longo do tempo."
+      }
+    ];
+
+    let selectedSubject = "TODAS";
+    let activeQuestions = [];
+    let currentIndex = 0;
+    let totalCorrect = 0;
+    let answered = false;
+    let statsBySubject = {};
+
+    const startScreen = document.getElementById("startScreen");
+    const quizScreen = document.getElementById("quizScreen");
+    const resultScreen = document.getElementById("resultScreen");
+    const scoreBadge = document.getElementById("scoreBadge");
+
+    document.querySelectorAll(".subject-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".subject-btn").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        selectedSubject = btn.dataset.subject;
+      });
+    });
+
+    function startQuiz() {
+      activeQuestions = selectedSubject === "TODAS"
+        ? [...QUESTIONS]
+        : QUESTIONS.filter((item) => item.subject === selectedSubject);
+
+      currentIndex = 0;
+      totalCorrect = 0;
+      statsBySubject = {};
+
+      activeQuestions.forEach((q) => {
+        if (!statsBySubject[q.subject]) {
+          statsBySubject[q.subject] = { correct: 0, total: 0 };
+        }
+        statsBySubject[q.subject].total += 1;
+      });
+
+      updateScoreBadge();
+      startScreen.style.display = "none";
+      resultScreen.style.display = "none";
+      quizScreen.style.display = "block";
+      renderQuestion();
+    }
+
+    function updateScoreBadge() {
+      scoreBadge.textContent = `Acertos: ${totalCorrect} / ${activeQuestions.length || 0}`;
+    }
+
+    function renderQuestion() {
+      answered = false;
+      const item = activeQuestions[currentIndex];
+      document.getElementById("qCounter").textContent = `Questão ${currentIndex + 1} de ${activeQuestions.length}`;
+      document.getElementById("qSubjectLabel").textContent = item.subject;
+      document.getElementById("qTopic").textContent = item.topic;
+      document.getElementById("questionTitle").textContent = item.q;
+      document.getElementById("progressFill").style.width = `${((currentIndex + 1) / activeQuestions.length) * 100}%`;
+
+      const passageBox = document.getElementById("passageBox");
+      if (item.passage) {
+        passageBox.innerHTML = item.passage;
+        passageBox.style.display = "block";
+      } else {
+        passageBox.innerHTML = "";
+        passageBox.style.display = "none";
+      }
+
+      const feedbackBox = document.getElementById("feedbackBox");
+      feedbackBox.className = "feedback";
+      feedbackBox.style.display = "none";
+      feedbackBox.textContent = "";
+
+      document.getElementById("nextBtn").style.display = "none";
+      document.getElementById("nextBtn").textContent =
+        currentIndex === activeQuestions.length - 1 ? "Ver Resultado" : "Próxima Questão";
+
+      const optionsBox = document.getElementById("optionsBox");
+      optionsBox.innerHTML = "";
+
+      item.options.forEach((optText, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.textContent = optText;
+        btn.addEventListener("click", () => handleAnswer(idx, btn));
+        optionsBox.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(chosenIdx, chosenBtn) {
+      if (answered) return;
+      answered = true;
+
+      const item = activeQuestions[currentIndex];
+      const allBtns = document.querySelectorAll(".option-btn");
+      allBtns.forEach((b) => (b.disabled = true));
+
+      const feedbackBox = document.getElementById("feedbackBox");
+      if (chosenIdx === item.answer) {
+        chosenBtn.classList.add("correct");
+        totalCorrect += 1;
+        statsBySubject[item.subject].correct += 1;
+        feedbackBox.className = "feedback ok";
+        feedbackBox.textContent = `Muito bem! Resposta correta. ${item.tip}`;
+      } else {
+        chosenBtn.classList.add("wrong");
+        allBtns[item.answer].classList.add("correct");
+        feedbackBox.className = "feedback no";
+        feedbackBox.textContent = `Quase lá! A resposta correta é ${item.options[item.answer]}. ${item.tip}`;
+      }
+
+      feedbackBox.style.display = "block";
+      updateScoreBadge();
+      document.getElementById("nextBtn").style.display = "inline-block";
+    }
+
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      if (currentIndex < activeQuestions.length - 1) {
+        currentIndex += 1;
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    });
+
+    function showResults() {
+      quizScreen.style.display = "none";
+      resultScreen.style.display = "block";
+
+      const pct = Math.round((totalCorrect / activeQuestions.length) * 100);
+      document.getElementById("finalSummaryText").textContent =
+        `Você acertou ${totalCorrect} de ${activeQuestions.length} questões (${pct}%).`;
+
+      const tbody = document.querySelector("#breakdownTable tbody");
+      tbody.innerHTML = "";
+
+      Object.entries(statsBySubject).forEach(([subj, data]) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${subj}</td><td>${data.correct}</td><td>${data.total}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.getElementById("startBtn").addEventListener("click", startQuiz);
+    document.getElementById("restartBtn").addEventListener("click", startQuiz);
+
+    function goHome() {
+      quizScreen.style.display = "none";
+      resultScreen.style.display = "none";
+      startScreen.style.display = "block";
+    }
+
+    document.getElementById("backMenuBtn").addEventListener("click", goHome);
+    document.getElementById("homeFromResultBtn").addEventListener("click", goHome);
+  </script>
+</body>
+</html>
